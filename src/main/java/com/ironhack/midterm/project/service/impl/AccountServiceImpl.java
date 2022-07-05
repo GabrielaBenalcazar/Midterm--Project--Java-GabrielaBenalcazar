@@ -42,11 +42,19 @@ public class AccountServiceImpl implements AccountService {
     public void transferMoney(Long sourceId, Long destinationId, BigDecimal amount) {
         Optional<Account> sourceAccount = accountRepository.findById(sourceId);
         Optional<Account> destinationAccount = accountRepository.findById(destinationId);
+
         if(sourceAccount.isEmpty() ) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "SourceAccount not found");
         }
+
         if (destinationAccount.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "DestinationAccount not found");
+        }
+
+        BigDecimal newBalance = sourceAccount.get().getBalance().getAmount().subtract(amount);
+
+        if (newBalance.compareTo(new BigDecimal(0)) < 0) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
 
         sourceAccount.get().decreaseBalance(amount);

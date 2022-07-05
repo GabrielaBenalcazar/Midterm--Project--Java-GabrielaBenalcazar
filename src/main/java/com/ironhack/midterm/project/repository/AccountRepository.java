@@ -16,8 +16,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Optional<Account> findById(Long id);
 
-    Account save(Account account);
-
     @Query("SELECT balance FROM Account WHERE id LIKE :id")
     Money getBalance(@Param("id") Long id);
 
