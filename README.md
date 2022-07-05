@@ -13,7 +13,7 @@
       <a href="#requirements">Requirements and Instructions</a>
     </li>
 <li>
-      <a href="#classdiagram">Requirements and Instructions</a>
+      <a href="#classdiagram">Class Diagram</a>
     </li>
     
   </ol>
