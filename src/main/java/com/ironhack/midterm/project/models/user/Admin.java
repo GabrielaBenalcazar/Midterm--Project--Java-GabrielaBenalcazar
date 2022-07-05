@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -16,9 +17,10 @@ public class Admin extends User {
         super();
     }
 
-    public Admin(String name, String password) {
-        super(name, password, UserRole.ADMIN);
+    public Admin(Set<Role> roles, String name, String password) {
+        super(roles, name, password);
     }
-
-
+    public Admin( String name, String password) {
+        super( name, password);
+    }
 }

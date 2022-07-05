@@ -7,8 +7,10 @@ import com.ironhack.midterm.project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import javax.validation.Valid;
 
 @RestController
 public class UserControllerImpl implements UserController {
@@ -21,8 +23,9 @@ public class UserControllerImpl implements UserController {
      */
     @PostMapping("/user/third-party")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addThirdPartyUser(String name, String password, String hashKey) {
-        User user = new ThirdParty(name, password, hashKey);
+    public void addThirdPartyUser(@RequestBody @Valid ThirdParty thirdParty) {
+
+        User user = new ThirdParty(thirdParty.getRoles(), thirdParty.getName(), thirdParty.getPassword());
 
         userRepository.save(user);
     }

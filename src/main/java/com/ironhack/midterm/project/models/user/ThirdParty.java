@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -13,10 +14,15 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @NoArgsConstructor
 @PrimaryKeyJoinColumn(name = "id")
 public class ThirdParty extends User {
-    public String hashKey;
 
-    public ThirdParty(String name, String password, String hashKey) {
-        super(name, password, UserRole.THIRD_PARTY);
-        this.hashKey = hashKey;
+
+    public ThirdParty(Set<Role> roles, String name, String password) {
+        super(roles, name, password);
+
     }
+    public ThirdParty(String name, String password) {
+        super( name, password);
+
+    }
+
 }

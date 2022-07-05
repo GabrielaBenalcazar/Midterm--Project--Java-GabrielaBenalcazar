@@ -6,6 +6,7 @@ import com.ironhack.midterm.project.models.account.Checking;
 import com.ironhack.midterm.project.models.clasees.Address;
 import com.ironhack.midterm.project.models.clasees.Money;
 import com.ironhack.midterm.project.models.user.AccountHolders;
+import com.ironhack.midterm.project.models.user.Role;
 import com.ironhack.midterm.project.models.user.ThirdParty;
 import com.ironhack.midterm.project.models.user.User;
 import com.ironhack.midterm.project.repository.AccountRepository;
@@ -19,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,9 +41,13 @@ class AccountServiceTest {
 
     @BeforeEach
     void setup() {
+        Role role = new Role("ACCOUNT_HOLDER");
+
         Address address = new Address(0, "", "", "", "");
-        AccountHolders user = new AccountHolders("name", "pass", "date", address, "address");
-        AccountHolders user2 = new AccountHolders("name2", "pass2", "date2", address, "address2");
+        AccountHolders user = new AccountHolders("name","pass1","12.12.12",address,address);
+        user.setRoles(Set.of(role));
+        AccountHolders user2 = new AccountHolders("name2", "pass2", "date2", address, address);
+        user2.setRoles(Set.of(role));
 
         userRepository.save(user);
         userRepository.save(user2);

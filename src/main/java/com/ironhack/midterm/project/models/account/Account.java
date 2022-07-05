@@ -33,6 +33,7 @@ public abstract class Account {
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     private AccountHolders secondaryOwner;
 
+
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "amount", column = @Column(name = "account_penalty_fee", nullable = false)),

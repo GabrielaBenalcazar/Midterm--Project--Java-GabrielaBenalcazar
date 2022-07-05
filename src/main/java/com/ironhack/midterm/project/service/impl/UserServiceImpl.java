@@ -12,11 +12,11 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Override
     public void addThirdPartyUser(String name,String password, String hashKey) {
-        ThirdParty thirdPartyUser = new ThirdParty(name,password,hashKey);
+        ThirdParty thirdPartyUser = new ThirdParty(name,password);
         if(thirdPartyUser.getName().length()==0){
             throw new IllegalArgumentException("Name cannot be empty");
         }
-        if(thirdPartyUser.getHashKey().length()==0){
+        if(thirdPartyUser.getPassword().length()==0){
             throw new IllegalArgumentException("HashKey cannot be empty");
         }
         userRepository.save(thirdPartyUser);

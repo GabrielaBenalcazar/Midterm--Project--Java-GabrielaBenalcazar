@@ -4,8 +4,9 @@ import com.ironhack.midterm.project.controller.interfaces.AccountController;
 import com.ironhack.midterm.project.dto.Transfer;
 import com.ironhack.midterm.project.models.account.Account;
 import com.ironhack.midterm.project.models.clasees.Money;
+import com.ironhack.midterm.project.models.user.Role;
 import com.ironhack.midterm.project.models.user.ThirdParty;
-import com.ironhack.midterm.project.models.user.UserRole;
+
 import com.ironhack.midterm.project.repository.AccountRepository;
 import com.ironhack.midterm.project.security.UserRoleDetails;
 import com.ironhack.midterm.project.service.interfaces.AccountService;
@@ -37,9 +38,11 @@ public class AccountControllerImpl implements AccountController {
     @ResponseStatus(HttpStatus.OK)
     public Money getBalance(@AuthenticationPrincipal UserRoleDetails userDetails,
                             @PathVariable(name="id") Long id) {
-        if (userDetails.getRole() == UserRole.ADMIN) {
+        Role roleAdmin = new Role("ADMIN");
+        Role roleAccountHolder = new Role("ACCOUNT_HOLDER");
+        if (userDetails.getRoles().contains(roleAdmin)) {
             return accountService.getBalance(id);
-        } else if (userDetails.getRole() == UserRole.ACCOUNT_HOLDER) {
+        } else if (userDetails.getRoles().contains(roleAccountHolder)) {
             Optional<Account> optionalAccount = accountRepository.findById(id);
 
             if (optionalAccount.isEmpty()) {
@@ -80,7 +83,7 @@ public class AccountControllerImpl implements AccountController {
      */
     @PostMapping("/account/transfer")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void transferMoney(@AuthenticationPrincipal UserRoleDetails user,
+    public void transferMoney(@AuthenticationPrincipal UserRoleDetails userDetails,
                               @RequestBody(required = false) Transfer transfer) {
         Optional<Account> optionalAccount = accountRepository.findById(transfer.getSourceAccount());
 
@@ -89,16 +92,18 @@ public class AccountControllerImpl implements AccountController {
         }
 
         Account account = optionalAccount.get();
+        Role roleAdmin = new Role("ADMIN");
+        Role roleAccountHolder = new Role("ACCOUNT_HOLDER");
 
-        if (user.getRole() == UserRole.ACCOUNT_HOLDER) {
+        if (userDetails.getRoles().contains(roleAccountHolder)) {
             if (!Objects.equals(transfer.getPrimaryOwnerName(), account.getPrimaryOwner().getName()) ||
                     !Objects.equals(transfer.getSecondaryOwnerName(), account.getSecondaryOwner().getName())
             ) {
                 throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED);
             }
         } else {
-            ThirdParty thirdParty = (ThirdParty) user.getUser();
-            if (!Objects.equals(transfer.getHashedKey(), thirdParty.getHashKey())) {
+            ThirdParty thirdParty = (ThirdParty) userDetails.getUser();
+            if (!Objects.equals(transfer.getHashedKey(), thirdParty.getPassword())) {
                 throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED);
             }
         }
