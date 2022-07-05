@@ -13,7 +13,7 @@
       <a href="#requirements">Requirements and Instructions</a>
     </li>
 <li>
-      <a href="#classdiagram">Class Diagram</a>
+      <a href="#class-diagram">Class Diagram</a>
     </li>
     
   </ol>
@@ -190,7 +190,7 @@ Adequate and complete documentation in the README.md file.
 
 
 <!-- Class Diagram -->
-##classdiagram
+## class-diagram
 ![Class Diagram](src/main/resources/static/classdiagram.png)
 
 []: # Language: markdown
